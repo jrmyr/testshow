@@ -10,18 +10,23 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,10 +41,39 @@ class ControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        when(userRepoMock.findAll()).thenReturn(List.of(
-                new UserEntity(UUID.randomUUID(), "Hans", "Hamster", 43),
-                new UserEntity(UUID.randomUUID(), "Else", "Schmitt", 23)
-        ));
+        UserEntity hansHamster = new UserEntity(UUID.randomUUID(), "Hans", "Hamster", 43);
+        UserEntity elseSchmitt = new UserEntity(UUID.randomUUID(), "Else", "Schmitt", 23);
+        when(userRepoMock.findAll()).thenReturn(List.of(hansHamster, elseSchmitt));
+        when(userRepoMock.findByPrenameAndLastname(anyString(), anyString())).thenReturn(Optional.empty());
+        when(userRepoMock.findByPrenameAndLastname("Hans", "Hamster")).thenReturn(Optional.of(hansHamster));
+        when(userRepoMock.findByPrenameAndLastname("Else", "Schmitt")).thenReturn(Optional.of(hansHamster));
+    }
+
+    @Test
+    void addUser_OK() throws Exception {
+        addUserRequest("Karl", "Meerschwein")
+                .andExpect(status().isOk())
+        ;
+    }
+
+    @Test
+    void addUser_fail() throws Exception {
+        addUserRequest("Hans", "Hamster")
+                .andExpect(status().isConflict())
+        ;
+    }
+
+    private ResultActions addUserRequest(String prename, String lastname) throws Exception {
+        return mockMvc
+                .perform(post("/user/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "  \"id\": \"" + UUID.randomUUID() + "\"," +
+                                "  \"prename\": \"" + prename + "\"," +
+                                "  \"lastname\": \"" + lastname + "\"," +
+                                "  \"age\": 100" +
+                                "}")
+                );
     }
 
     @ParameterizedTest
@@ -87,6 +121,7 @@ class ControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
+        System.out.println(responseBody);
         assertTrue(responseBody.contains("Hans"));
         assertTrue(responseBody.contains("Else"));
     }
