@@ -35,9 +35,11 @@ public class UserEntity {
         return Objects.hash(getId());
     }
 
+    /*
     public boolean logicallyEquals(UserEntity other) {
         return Objects.equals(other.getPrename(), this.getPrename()) &&
                 Objects.equals(other.getLastname(), this.getLastname());
     }
+    */
 
 }

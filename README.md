@@ -19,20 +19,21 @@ Go to [start.spring.io](start.spring.io) and create a Java 11 gradle project wit
 
 ### Misc
 * Constructor Injection
-* Testen bevor DB da
+
 
 ### Mock-based testing
-* Testing while programming is useful
+* ("API") Testing while programming is useful as it is fast and the created tests can remain
+* Testable before having/deeding a real a DB
+* Multiple assert -> assertAll -> parameterized test
+
+
 * Private method testing is not useful:
   - Test in UserEntity 
   - --> code review: bad design
   - Test in ...
   - public Methode zum Abrufen des Grußes
   - Diese Methode benutzt dann wieder private/protected Methoden
-* Lektion: Testen von "öffentlichen Verträgen" 
-* "API testing" is useful also for developing
-* Mehrfach assert -> asser all -> parameterized test
-* Testabdeckung: Wenn die mit jedem Commit mind. gleich bleibt wäre das schon ein Gewinn
+  * *Outcome*: test only public contracts
 
 ### Testcontainers-based testing
 * Postgres DB

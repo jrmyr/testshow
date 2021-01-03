@@ -4,10 +4,9 @@ import de.myrnet.testshow.domain.UserEntity;
 import de.myrnet.testshow.domain.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
@@ -19,15 +18,11 @@ public class Controller {
 
     @GetMapping("/users")
     public ResponseEntity<Collection<UserEntity>> getUsers() {
-
-        //return new Greeting(counter.incrementAndGet(), String.format(template, name));
         return ResponseEntity.ok(userRepo.findAll());
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<Collection<UserEntity>> greeting(
-            @RequestParam(value = "lastname", defaultValue = "World") String name) {
-        //return new Greeting(counter.incrementAndGet(), String.format(template, name));
+    @PostMapping(path = "/user/add", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity greeting(@RequestBody UserEntity user) {
         return ResponseEntity.ok(null);
     }
 
