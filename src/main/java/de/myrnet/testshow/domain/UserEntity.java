@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity
+@Entity(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

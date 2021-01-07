@@ -8,10 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class TestshowApplicationTestsMock {
 
-    //No DB configured yet; thus application context cannot load
-//	@Test
-//	void contextLoads() {
-//
-//	}
+    @Test
+	void contextLoads() {
+		// Now, as the DB is configured, the test works
+	}
 
 }
